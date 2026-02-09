@@ -1,3 +1,4 @@
+import React from 'react'
 import type { PortfolioSummary } from '@/api/types'
 import {
       formatCurrency,
@@ -19,7 +20,7 @@ interface PortfolioSummaryProps {
  *
  * This is the "hero" section of the dashboard
  */
-export const PortfolioSummaryCard = ({ summary }: PortfolioSummaryProps) => {
+const PortfolioSummaryCard = ({ summary }: PortfolioSummaryProps) => {
       const isProfitable = summary.totalProfitLoss >= 0
 
       return (
@@ -106,3 +107,7 @@ export const PortfolioSummaryCard = ({ summary }: PortfolioSummaryProps) => {
             </section>
       )
 }
+
+// Memoize component to prevent re-renders (Performance optimization)
+const MemoizedPortfolioSummaryCard = React.memo(PortfolioSummaryCard)
+export { MemoizedPortfolioSummaryCard as PortfolioSummaryCard }
