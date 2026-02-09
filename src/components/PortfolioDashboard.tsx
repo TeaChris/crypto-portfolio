@@ -1,12 +1,31 @@
 import { lazy, Suspense } from 'react'
 import { useDerivedPortfolio } from '@/hooks/useDerivedPortfolio'
-import { LoadingState } from './states/LoadingState'
-import { ErrorState } from './states/ErrorState'
-import { EmptyState } from './states/EmptyState'
-import { PartialState } from './states/PartialState'
-import { StaleBanner } from './states/StaleBanner'
-import { PortfolioSummaryCard } from './PortfolioSummary'
-// Lazy load AssetList for performance (Performance Skill)
+
+// Lazy load all components for optimal bundle splitting
+const LoadingState = lazy(() =>
+      import('./states/LoadingState').then((m) => ({
+            default: m.LoadingState,
+      })),
+)
+const ErrorState = lazy(() =>
+      import('./states/ErrorState').then((m) => ({ default: m.ErrorState })),
+)
+const EmptyState = lazy(() =>
+      import('./states/EmptyState').then((m) => ({ default: m.EmptyState })),
+)
+const PartialState = lazy(() =>
+      import('./states/PartialState').then((m) => ({
+            default: m.PartialState,
+      })),
+)
+const StaleBanner = lazy(() =>
+      import('./states/StaleBanner').then((m) => ({ default: m.StaleBanner })),
+)
+const PortfolioSummaryCard = lazy(() =>
+      import('./PortfolioSummary').then((m) => ({
+            default: m.PortfolioSummaryCard,
+      })),
+)
 const AssetList = lazy(() =>
       import('./AssetList').then((module) => ({ default: module.AssetList })),
 )
@@ -29,68 +48,150 @@ export const PortfolioDashboard = () => {
       // Route to appropriate state component
       switch (portfolioState.status) {
             case 'loading':
-                  return <LoadingState />
+                  return (
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
+                        >
+                              <LoadingState />
+                        </Suspense>
+                  )
 
             case 'error':
                   return (
-                        <ErrorState
-                              error={portfolioState.error}
-                              canRetry={portfolioState.canRetry}
-                        />
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
+                        >
+                              <ErrorState
+                                    error={portfolioState.error}
+                                    canRetry={portfolioState.canRetry}
+                              />
+                        </Suspense>
                   )
 
             case 'empty':
-                  return <EmptyState />
+                  return (
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
+                        >
+                              <EmptyState />
+                        </Suspense>
+                  )
 
             case 'partial':
                   return (
-                        <PartialState
-                              portfolio={portfolioState.portfolio}
-                              message={portfolioState.message}
-                        />
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
+                        >
+                              <PartialState
+                                    portfolio={portfolioState.portfolio}
+                                    message={portfolioState.message}
+                              />
+                        </Suspense>
                   )
 
             case 'stale':
                   // Show stale banner but still display data
                   return (
-                        <main
-                              id="main-content"
-                              className="min-h-screen bg-crypto-dark p-6"
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
                         >
-                              <div className="max-w-7xl mx-auto">
-                                    <StaleBanner
-                                          staleSince={portfolioState.staleSince}
-                                    />
-                                    <PortfolioSummaryCard
-                                          summary={portfolioState.summary}
-                                    />
-                                    <Suspense fallback={<LoadingState />}>
-                                          <AssetList
-                                                assets={portfolioState.data}
+                              <main
+                                    id="main-content"
+                                    className="min-h-screen bg-crypto-dark p-6"
+                              >
+                                    <div className="max-w-7xl mx-auto">
+                                          <StaleBanner
+                                                staleSince={
+                                                      portfolioState.staleSince
+                                                }
                                           />
-                                    </Suspense>
-                              </div>
-                        </main>
+                                          <PortfolioSummaryCard
+                                                summary={portfolioState.summary}
+                                          />
+                                          <Suspense
+                                                fallback={
+                                                      <div className="text-center py-8 text-crypto-accent">
+                                                            Loading assets...
+                                                      </div>
+                                                }
+                                          >
+                                                <AssetList
+                                                      assets={
+                                                            portfolioState.data
+                                                      }
+                                                />
+                                          </Suspense>
+                                    </div>
+                              </main>
+                        </Suspense>
                   )
 
             case 'ready':
                   // Happy path: all data fresh and available
                   return (
-                        <main
-                              id="main-content"
-                              className="min-h-screen bg-crypto-dark p-6"
+                        <Suspense
+                              fallback={
+                                    <div className="min-h-screen bg-crypto-dark flex items-center justify-center">
+                                          <div className="text-crypto-accent">
+                                                Loading...
+                                          </div>
+                                    </div>
+                              }
                         >
-                              <div className="max-w-7xl mx-auto">
-                                    <PortfolioSummaryCard
-                                          summary={portfolioState.summary}
-                                    />
-                                    <Suspense fallback={<LoadingState />}>
-                                          <AssetList
-                                                assets={portfolioState.data}
+                              <main
+                                    id="main-content"
+                                    className="min-h-screen bg-crypto-dark p-6"
+                              >
+                                    <div className="max-w-7xl mx-auto">
+                                          <PortfolioSummaryCard
+                                                summary={portfolioState.summary}
                                           />
-                                    </Suspense>
-                              </div>
-                        </main>
+                                          <Suspense
+                                                fallback={
+                                                      <div className="text-center py-8 text-crypto-accent">
+                                                            Loading assets...
+                                                      </div>
+                                                }
+                                          >
+                                                <AssetList
+                                                      assets={
+                                                            portfolioState.data
+                                                      }
+                                                />
+                                          </Suspense>
+                                    </div>
+                              </main>
+                        </Suspense>
                   )
 
             default:
