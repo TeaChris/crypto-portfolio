@@ -44,7 +44,7 @@ All edge cases handled with dedicated UI states:
 
 ### State Management Strategy
 
-**Decision**: React Query only (no Zustand)
+**Decision**: React Query only
 
 **Rationale**:
 
@@ -345,7 +345,5 @@ This is a demo project for educational purposes.
 - **Tailwind**: Rapid UI development
 
 ---
-
-**Built with ❤️ as a senior frontend engineering demonstration**
 
 For questions or feedback, please open an issue.
