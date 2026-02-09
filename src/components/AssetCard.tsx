@@ -1,3 +1,4 @@
+import React from 'react'
 import type { EnrichedAsset } from '@/api/types'
 import {
       formatCurrency,
@@ -20,7 +21,7 @@ interface AssetCardProps {
  * - P&L (absolute and percentage)
  * - Color-coded price change
  */
-export const AssetCard = ({ asset }: AssetCardProps) => {
+const AssetCard = ({ asset }: AssetCardProps) => {
       const isProfitable = asset.profitLoss >= 0
       const isPriceUp = asset.priceChangePercentage24h >= 0
 
@@ -137,3 +138,7 @@ export const AssetCard = ({ asset }: AssetCardProps) => {
             </article>
       )
 }
+
+// Memoize component to prevent re-renders (Performance optimization)
+const MemoizedAssetCard = React.memo(AssetCard)
+export { MemoizedAssetCard as AssetCard }
