@@ -6,31 +6,30 @@ import { QueryClient } from '@tanstack/react-query'
  * Key decisions:
  * - Default stale time: 0 (always check for updates)
  * - Default cache time: 5 minutes (keep data in cache)
- * - Retry: 3 attempts with exponential backoff
- * - Refetch on window focus: true (refresh when user returns)
+ * - Default stale time: 1 minute (increased for better caching)
+ * - Default cache time: 10 minutes (keep data in cache)
+ * - Retry: 2 attempts with exponential backoff
+ * - Refetch on window focus: false (prevent excessive refetches)
  */
 export const queryClient = new QueryClient({
       defaultOptions: {
             queries: {
-                  // Always check if data is stale on query mount
-                  staleTime: 0,
+                  // Cache optimization
+                  staleTime: 60 * 1000, // 1 minute (increased for better caching)
+                  gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
 
-                  // Keep unused data in cache for 5 minutes
-                  gcTime: 5 * 60 * 1000,
-
-                  // Retry failed requests 3 times with exponential backoff
-                  retry: 3,
+                  // Retry strategy (optimized for performance)
+                  retry: 2, // Reduced retries
                   retryDelay: (attemptIndex) =>
                         Math.min(1000 * 2 ** attemptIndex, 30000),
 
-                  // Refetch when user focuses window/tab
-                  refetchOnWindowFocus: true,
+                  // Refetch strategy (performance optimized)
+                  refetchOnWindowFocus: false, // Prevent excessive refetches
+                  refetchOnReconnect: true, // Only refetch on reconnect
+                  refetchOnMount: false, // Don't refetch on mount
 
-                  // Don't refetch on mount by default (controlled per-query)
-                  refetchOnMount: false,
-
-                  // Don't refetch on reconnect (we handle this per-query)
-                  refetchOnReconnect: false,
+                  // Network optimization
+                  networkMode: 'online',
             },
       },
 })
