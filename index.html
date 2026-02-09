@@ -36,17 +36,38 @@
             <!-- Favicon -->
             <link rel="icon" type="image/svg+xml" href="/vite.svg" />
 
-            <!-- Distinctive Fonts (Design Skill: Avoid generic fonts) -->
+            <!-- Optimized Font Loading Strategy (Performance Critical) -->
+            <!-- 1. Preconnect to font origins (reduces DNS + TCP + SSL time) -->
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
                   rel="preconnect"
                   href="https://fonts.gstatic.com"
                   crossorigin
             />
+
+            <!-- 2. Preload critical fonts (Space Grotesk for display) -->
             <link
-                  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap"
-                  rel="stylesheet"
+                  rel="preload"
+                  as="style"
+                  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap"
             />
+
+            <!-- 3. Load fonts with optimized parameters -->
+            <!-- &text subset removed for full coverage, display=swap prevents FOIT -->
+            <link
+                  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap"
+                  rel="stylesheet"
+                  media="print"
+                  onload="this.media = 'all'"
+            />
+
+            <!-- Fallback for no-JS -->
+            <noscript>
+                  <link
+                        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap"
+                        rel="stylesheet"
+                  />
+            </noscript>
       </head>
       <body>
             <!-- Skip to main content link for accessibility -->
