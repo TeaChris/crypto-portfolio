@@ -21,19 +21,9 @@ export const usePrices = () => {
       return useQuery<PriceData[], Error>({
             queryKey: ['prices'],
             queryFn: fetchPrices,
-
-            // Refetch every 30 seconds for "live" updates
-            refetchInterval: 30 * 1000,
-
-            // Data is considered stale after 20 seconds
-            // This creates a window where we show stale indicator
-            staleTime: 20 * 1000,
-
-            // Refetch when user returns to tab
-            refetchOnWindowFocus: true,
-
-            // Keep previous data while fetching new data
-            // Prevents UI flicker during updates
-            placeholderData: (previousData) => previousData,
+            staleTime: 45 * 1000, // 45 seconds
+            refetchInterval: 60 * 1000, // Poll every 60 seconds (optimized for performance)
+            refetchIntervalInBackground: false, // Don't poll in background
+            placeholderData: (previousData) => previousData, // Prevent UI flicker
       })
 }
